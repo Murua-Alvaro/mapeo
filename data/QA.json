@@ -1,0 +1,23 @@
+{
+  "annual_counts": {
+    "2010": 18488,
+    "2011": 18654,
+    "2012": 18833,
+    "2013": 18769,
+    "2015": 20910,
+    "2016": 21430,
+    "2017": 21585,
+    "2018": 21778,
+    "2019": 23464,
+    "2020": 24100,
+    "2021": 23822,
+    "2022": 23822,
+    "2023": 23850,
+    "2024": 26409,
+    "2025": 26950,
+    "2026": 27487
+  },
+  "catalog_agebs_2025": 302,
+  "records_2025": 26950,
+  "note": "Archivos reconstruidos desde la base histórica consolidada. Los conteos coinciden con el manifiesto del portal original."
+}

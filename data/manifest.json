@@ -1,0 +1,261 @@
+{
+  "title": "Mapa económico DENUE de Mazatlán por AGEB",
+  "default_year": "2025",
+  "years": [
+    {
+      "year": "2010",
+      "edition": "2010",
+      "month": "",
+      "file": "data/years/2010.json",
+      "records": 18488,
+      "source": 18488,
+      "mapped_ageb": 18488,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2011",
+      "edition": "2011",
+      "month": "",
+      "file": "data/years/2011.json",
+      "records": 18654,
+      "source": 18654,
+      "mapped_ageb": 18654,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2012",
+      "edition": "2012",
+      "month": "",
+      "file": "data/years/2012.json",
+      "records": 18833,
+      "source": 18833,
+      "mapped_ageb": 18833,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2013",
+      "edition": "2013_B",
+      "month": "",
+      "file": "data/years/2013.json",
+      "records": 18769,
+      "source": 18769,
+      "mapped_ageb": 18769,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2015",
+      "edition": "2015-02",
+      "month": "02",
+      "file": "data/years/2015.json",
+      "records": 20910,
+      "source": 20910,
+      "mapped_ageb": 20910,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2016",
+      "edition": "2016-10",
+      "month": "10",
+      "file": "data/years/2016.json",
+      "records": 21430,
+      "source": 21430,
+      "mapped_ageb": 21430,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2017",
+      "edition": "2017-11",
+      "month": "11",
+      "file": "data/years/2017.json",
+      "records": 21585,
+      "source": 21585,
+      "mapped_ageb": 21585,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2018",
+      "edition": "2018-11",
+      "month": "11",
+      "file": "data/years/2018.json",
+      "records": 21778,
+      "source": 21778,
+      "mapped_ageb": 21778,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2019",
+      "edition": "2019-11",
+      "month": "11",
+      "file": "data/years/2019.json",
+      "records": 23464,
+      "source": 23464,
+      "mapped_ageb": 23464,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2020",
+      "edition": "2020-11",
+      "month": "11",
+      "file": "data/years/2020.json",
+      "records": 24100,
+      "source": 24100,
+      "mapped_ageb": 24100,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2021",
+      "edition": "2021-11",
+      "month": "11",
+      "file": "data/years/2021.json",
+      "records": 23822,
+      "source": 23822,
+      "mapped_ageb": 23822,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2022",
+      "edition": "2022-11",
+      "month": "11",
+      "file": "data/years/2022.json",
+      "records": 23822,
+      "source": 23822,
+      "mapped_ageb": 23822,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2023",
+      "edition": "2023-11",
+      "month": "11",
+      "file": "data/years/2023.json",
+      "records": 23850,
+      "source": 23850,
+      "mapped_ageb": 23850,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2024",
+      "edition": "2024-11",
+      "month": "11",
+      "file": "data/years/2024.json",
+      "records": 26409,
+      "source": 26409,
+      "mapped_ageb": 26409,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2025",
+      "edition": "2025-05",
+      "month": "05",
+      "file": "data/years/2025.json",
+      "records": 26950,
+      "source": 26950,
+      "mapped_ageb": 26950,
+      "sin_ageb": 0
+    },
+    {
+      "year": "2026",
+      "edition": "2026-05",
+      "month": "05",
+      "file": "data/years/2026.json",
+      "records": 27487,
+      "source": 27487,
+      "mapped_ageb": 27487,
+      "sin_ageb": 0
+    }
+  ],
+  "sectors": {
+    "11": "Agricultura, cría y aprovechamiento forestal, pesca y caza",
+    "21": "Minería",
+    "22": "Energía, agua y gas",
+    "23": "Construcción",
+    "31-33": "Industrias manufactureras",
+    "43": "Comercio al por mayor",
+    "46": "Comercio al por menor",
+    "48-49": "Transportes, correos y almacenamiento",
+    "51": "Información en medios masivos",
+    "52": "Servicios financieros y de seguros",
+    "53": "Servicios inmobiliarios y de alquiler",
+    "54": "Servicios profesionales, científicos y técnicos",
+    "55": "Corporativos",
+    "56": "Apoyo a negocios y manejo de residuos",
+    "61": "Servicios educativos",
+    "62": "Servicios de salud y asistencia social",
+    "71": "Esparcimiento, cultura y deporte",
+    "72": "Alojamiento temporal y preparación de alimentos",
+    "81": "Otros servicios, excepto gobierno",
+    "93": "Actividades gubernamentales",
+    "00": "Sin clasificación sectorial"
+  },
+  "sizes": {
+    "0-5": "0 a 5 personas",
+    "6-10": "6 a 10 personas",
+    "11-30": "11 a 30 personas",
+    "31-50": "31 a 50 personas",
+    "51-100": "51 a 100 personas",
+    "101-250": "101 a 250 personas",
+    "251+": "251 y más personas",
+    "ND": "No disponible"
+  },
+  "zones": {
+    "centro_historico": {
+      "name": "Centro Histórico",
+      "description": "AGEB que cubren el polígono amplio del Centro Histórico y su entorno inmediato, siguiendo el Plan Parcial como referencia territorial.",
+      "agebs": [
+        "0425",
+        "1508",
+        "1495",
+        "0389",
+        "0406",
+        "0393",
+        "0374",
+        "0355",
+        "036A",
+        "0321",
+        "0336",
+        "0340"
+      ]
+    },
+    "malecon": {
+      "name": "Malecón",
+      "description": "AGEB costeras desde Olas Altas y Paseo Claussen hasta Avenida del Mar y Rafael Buelna.",
+      "agebs": [
+        "0389",
+        "0355",
+        "029A",
+        "0302",
+        "1480",
+        "1870"
+      ]
+    },
+    "zona_dorada": {
+      "name": "Zona Dorada",
+      "description": "AGEB del corredor Rafael Buelna–Camarón Sábalo, incluyendo Gaviotas, Lomas de Mazatlán y Sábalo Country.",
+      "agebs": [
+        "1461",
+        "1457",
+        "2506",
+        "075A"
+      ]
+    },
+    "cerritos": {
+      "name": "Cerritos",
+      "description": "AGEB asociada directamente con Cerritos, Cerritos Resort, Palmilla y Nuevo Mazatlán.",
+      "agebs": [
+        "1067"
+      ]
+    },
+    "marina": {
+      "name": "Marina Mazatlán",
+      "description": "Capa complementaria para separar Marina Mazatlán de Zona Dorada y Cerritos.",
+      "agebs": [
+        "3275",
+        "2192",
+        "0529",
+        "3881",
+        "3966"
+      ]
+    }
+  },
+  "geometry_url": "https://gaia.inegi.org.mx/wscatgeo/v2/geo/agebu/25/012",
+  "geometry_note": "AGEB urbana oficial del servicio web del Marco Geoestadístico de INEGI. El portal filtra el municipio 012 y la localidad urbana de Mazatlán mediante sus atributos."
+}

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Mapa económico de Mazatlán con datos DENUE históricos agregados por AGEB, zona y código postal.">
+  <title>Growa | Inteligencia económica territorial de Mazatlán</title>
+
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="app-shell" id="appShell">
+
+    <!-- BARRA SUPERIOR COMPACTA -->
+    <header class="app-topbar">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">G</div>
+
+        <div class="brand-copy">
+          <p class="eyebrow">Growa · Inteligencia territorial</p>
+          <h1>Mapa económico DENUE de Mazatlán</h1>
+        </div>
+      </div>
+
+      <div class="topbar-summary">
+        <span class="summary-chip">AGEB</span>
+        <span class="summary-chip">2010–2026</span>
+        <span class="summary-chip source">DENUE · INEGI</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button
+          class="icon-button mobile-only"
+          id="mobileFiltersBtn"
+          type="button"
+          aria-controls="filterSidebar"
+          aria-expanded="false">
+          <span aria-hidden="true">☰</span>
+          <span>Filtros</span>
+        </button>
+
+        <button
+          class="icon-button mobile-only"
+          id="mobileInsightsBtn"
+          type="button"
+          aria-controls="insightPanel"
+          aria-expanded="false">
+          <span aria-hidden="true">▤</span>
+          <span>Detalle</span>
+        </button>
+
+        <button
+          class="icon-button"
+          id="dataDrawerBtn"
+          type="button"
+          aria-controls="dataDrawer"
+          aria-expanded="false">
+          <span aria-hidden="true">▦</span>
+          <span class="desktop-label">Ranking y zonas</span>
+        </button>
+
+        <button
+          class="icon-button"
+          id="fullscreenBtn"
+          type="button">
+          <span aria-hidden="true">⛶</span>
+          <span class="desktop-label" id="fullscreenLabel">Pantalla completa</span>
+        </button>
+
+        <a
+          class="icon-button open-link"
+          href="./"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span aria-hidden="true">↗</span>
+          <span class="desktop-label">Abrir aparte</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ESPACIO PRINCIPAL: FILTROS + MAPA + INFORMACIÓN -->
+    <main class="workspace">
+
+      <!-- FILTROS FIJOS -->
+      <aside class="filter-sidebar panel-surface" id="filterSidebar">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Consulta territorial</p>
+            <h2>Filtros</h2>
+          </div>
+
+          <button
+            class="panel-close mobile-only"
+            id="closeFiltersBtn"
+            type="button"
+            aria-label="Cerrar filtros">
+            ×
+          </button>
+        </div>
+
+        <section class="controls">
+          <div class="control-grid">
+            <label>
+              <span>Año</span>
+              <select id="yearSelect"></select>
+            </label>
+
+            <label>
+              <span>Comparar con</span>
+              <select id="compareSelect"></select>
+            </label>
+
+            <label>
+              <span>Zona</span>
+              <select id="zoneSelect">
+                <option value="ALL">Todo Mazatlán</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Código postal</span>
+              <select id="cpSelect">
+                <option value="ALL">Todos</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Sector SCIAN</span>
+              <select id="sectorSelect">
+                <option value="ALL">Todos los sectores</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Tamaño del establecimiento</span>
+              <select id="sizeSelect">
+                <option value="ALL">Todos los tamaños</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Modo cartográfico</span>
+              <select id="mapModeSelect">
+                <option value="count">Establecimientos por AGEB</option>
+                <option value="change_abs">Cambio absoluto</option>
+                <option value="change_pct">Cambio porcentual</option>
+                <option value="cp">Código postal dominante</option>
+                <option value="zone">Zona analítica</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Buscar AGEB</span>
+              <input
+                id="agebSearch"
+                type="search"
+                inputmode="text"
+                placeholder="Ej. 0393">
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="resetBtn" class="secondary" type="button">
+              Restablecer
+            </button>
+
+            <button id="downloadBtn" type="button">
+              Descargar CSV
+            </button>
+          </div>
+        </section>
+
+        <details class="method-box">
+          <summary>Notas metodológicas</summary>
+
+          <p>
+            Las zonas son selecciones explícitas de AGEB y pueden
+            superponerse.
+          </p>
+
+          <p>
+            El código postal procede del domicilio DENUE y se muestra como
+            CP dominante dentro de cada AGEB; no representa un polígono
+            postal oficial.
+          </p>
+        </details>
+
+        <div class="sidebar-source">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Datos agregados · Sin nombres comerciales</span>
+        </div>
+      </aside>
+
+      <!-- MAPA SIEMPRE VISIBLE -->
+      <section class="map-stage" aria-label="Área principal del mapa">
+
+        <section class="metrics" aria-live="polite">
+          <article class="metric-card">
+            <span>Establecimientos</span>
+            <strong id="metricTotal">–</strong>
+            <small id="metricTotalNote">–</small>
+          </article>
+
+          <article class="metric-card">
+            <span>AGEB activas</span>
+            <strong id="metricAgeb">–</strong>
+            <small id="metricAgebNote">–</small>
+          </article>
+
+          <article class="metric-card">
+            <span>Cambio</span>
+            <strong id="metricChange">–</strong>
+            <small id="metricChangeNote">–</small>
+          </article>
+
+          <article class="metric-card">
+            <span>Participación</span>
+            <strong id="metricShare">–</strong>
+            <small id="metricShareNote">–</small>
+          </article>
+        </section>
+
+        <div class="map-wrap">
+          <div id="mapStatus" class="map-status">
+            Cargando geometría oficial de AGEB de INEGI…
+          </div>
+
+          <div
+            id="map"
+            aria-label="Mapa temático de AGEB de Mazatlán">
+          </div>
+
+          <div id="legend" class="legend"></div>
+        </div>
+
+        <div class="map-mobile-actions mobile-only">
+          <button id="mapFiltersBtn" type="button">
+            ☰ Filtros
+          </button>
+
+          <button id="mapDetailBtn" type="button">
+            ▤ Información
+          </button>
+        </div>
+      </section>
+
+      <!-- INFORMACIÓN SIEMPRE DISPONIBLE -->
+      <aside class="insight-panel panel-surface" id="insightPanel">
+        <div class="panel-header insight-heading">
+          <div>
+            <p class="eyebrow">Análisis territorial</p>
+            <h2>Información</h2>
+          </div>
+
+          <button
+            class="panel-close mobile-only"
+            id="closeInsightsBtn"
+            type="button"
+            aria-label="Cerrar información">
+            ×
+          </button>
+        </div>
+
+        <nav class="panel-tabs" aria-label="Secciones de información">
+          <button
+            class="tab-button active"
+            type="button"
+            data-tab="detailTab">
+            Detalle
+          </button>
+
+          <button
+            class="tab-button"
+            type="button"
+            data-tab="trendTab">
+            Evolución
+          </button>
+
+          <button
+            class="tab-button"
+            type="button"
+            data-tab="sectorTab">
+            Sectores
+          </button>
+        </nav>
+
+        <div class="tab-area">
+
+          <section
+            class="tab-panel active detail"
+            id="detailTab">
+            <div id="detailPanel">
+              <h2>Detalle territorial</h2>
+
+              <div id="detailContent" class="empty-state">
+                Selecciona un AGEB en el mapa para consultar su estructura
+                sectorial, códigos postales y evolución.
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="tab-panel"
+            id="trendTab">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Evolución</p>
+                <h2 id="trendTitle">Serie histórica</h2>
+              </div>
+
+              <button
+                id="loadTrendBtn"
+                class="secondary compact-button"
+                type="button">
+                Actualizar
+              </button>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="trendChart"></canvas>
+            </div>
+
+            <p class="footnote">
+              La serie utiliza el corte anual seleccionado de cada año.
+              No existe un corte anual seleccionado para 2014.
+            </p>
+          </section>
+
+          <section
+            class="tab-panel"
+            id="sectorTab">
+            <p class="eyebrow">Composición</p>
+            <h2>Sectores principales</h2>
+            <div id="sectorBars" class="bars"></div>
+          </section>
+
+        </div>
+      </aside>
+    </main>
+
+    <!-- CAJÓN INFERIOR: INFORMACIÓN SECUNDARIA -->
+    <section
+      class="data-drawer"
+      id="dataDrawer"
+      aria-hidden="true">
+
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">Información complementaria</p>
+          <h2>Ranking territorial y comparación de zonas</h2>
+        </div>
+
+        <button
+          class="drawer-close"
+          id="closeDataDrawerBtn"
+          type="button"
+          aria-label="Cerrar información complementaria">
+          ×
+        </button>
+      </div>
+
+      <div class="drawer-content">
+        <section class="table-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ranking territorial</p>
+              <h2>AGEB según los filtros actuales</h2>
+            </div>
+
+            <span id="tableCount" class="pill">–</span>
+          </div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>AGEB</th>
+                  <th>Zona(s)</th>
+                  <th>CP dominante</th>
+                  <th>Establecimientos</th>
+                  <th>Cambio</th>
+                  <th>Variación</th>
+                  <th>Sector principal</th>
+                </tr>
+              </thead>
+
+              <tbody id="agebTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="zone-section">
+          <p class="eyebrow">Comparación de zonas</p>
+          <h2>
+            Centro Histórico, Malecón, Zona Dorada, Cerritos y Marina
+          </h2>
+
+          <div id="zoneCards" class="zone-cards"></div>
+
+          <p class="footnote">
+            Las sumas por zona no deben sumarse entre sí porque algunas
+            zonas comparten AGEB.
+          </p>
+        </section>
+      </div>
+    </section>
+
+    <div class="screen-overlay" id="screenOverlay" hidden></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+
+  <!-- INTERACCIONES DE LA NUEVA INTERFAZ -->
+  <script>
+    (function () {
+      const shell = document.getElementById("appShell");
+      const filters = document.getElementById("filterSidebar");
+      const insights = document.getElementById("insightPanel");
+      const drawer = document.getElementById("dataDrawer");
+      const overlay = document.getElementById("screenOverlay");
+
+      const mobileFiltersBtn = document.getElementById("mobileFiltersBtn");
+      const mobileInsightsBtn = document.getElementById("mobileInsightsBtn");
+      const mapFiltersBtn = document.getElementById("mapFiltersBtn");
+      const mapDetailBtn = document.getElementById("mapDetailBtn");
+      const closeFiltersBtn = document.getElementById("closeFiltersBtn");
+      const closeInsightsBtn = document.getElementById("closeInsightsBtn");
+      const dataDrawerBtn = document.getElementById("dataDrawerBtn");
+      const closeDataDrawerBtn = document.getElementById("closeDataDrawerBtn");
+      const fullscreenBtn = document.getElementById("fullscreenBtn");
+      const fullscreenLabel = document.getElementById("fullscreenLabel");
+
+      function refreshMapSize() {
+        window.setTimeout(function () {
+          try {
+            if (state && state.map) {
+              state.map.invalidateSize();
+            }
+          } catch (error) {
+            /* La aplicación todavía puede estar cargando. */
+          }
+        }, 220);
+      }
+
+      function updateOverlay() {
+        const visible =
+          filters.classList.contains("is-open") ||
+          insights.classList.contains("is-open");
+
+        overlay.hidden = !visible;
+      }
+
+      function closeMobilePanels() {
+        filters.classList.remove("is-open");
+        insights.classList.remove("is-open");
+        mobileFiltersBtn.setAttribute("aria-expanded", "false");
+        mobileInsightsBtn.setAttribute("aria-expanded", "false");
+        updateOverlay();
+        refreshMapSize();
+      }
+
+      function openFilters() {
+        insights.classList.remove("is-open");
+        filters.classList.add("is-open");
+        mobileFiltersBtn.setAttribute("aria-expanded", "true");
+        mobileInsightsBtn.setAttribute("aria-expanded", "false");
+        updateOverlay();
+      }
+
+      function openInsights() {
+        filters.classList.remove("is-open");
+        insights.classList.add("is-open");
+        mobileInsightsBtn.setAttribute("aria-expanded", "true");
+        mobileFiltersBtn.setAttribute("aria-expanded", "false");
+        updateOverlay();
+      }
+
+      [mobileFiltersBtn, mapFiltersBtn].forEach(function (button) {
+        button.addEventListener("click", openFilters);
+      });
+
+      [mobileInsightsBtn, mapDetailBtn].forEach(function (button) {
+        button.addEventListener("click", openInsights);
+      });
+
+      closeFiltersBtn.addEventListener("click", closeMobilePanels);
+      closeInsightsBtn.addEventListener("click", closeMobilePanels);
+      overlay.addEventListener("click", closeMobilePanels);
+
+      dataDrawerBtn.addEventListener("click", function () {
+        const opening = !drawer.classList.contains("is-open");
+        drawer.classList.toggle("is-open", opening);
+        drawer.setAttribute("aria-hidden", String(!opening));
+        dataDrawerBtn.setAttribute("aria-expanded", String(opening));
+        refreshMapSize();
+      });
+
+      closeDataDrawerBtn.addEventListener("click", function () {
+        drawer.classList.remove("is-open");
+        drawer.setAttribute("aria-hidden", "true");
+        dataDrawerBtn.setAttribute("aria-expanded", "false");
+        refreshMapSize();
+      });
+
+      document.querySelectorAll(".tab-button").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const target = button.dataset.tab;
+
+          document.querySelectorAll(".tab-button").forEach(function (item) {
+            item.classList.toggle("active", item === button);
+          });
+
+          document.querySelectorAll(".tab-panel").forEach(function (panel) {
+            panel.classList.toggle("active", panel.id === target);
+          });
+
+          if (target === "trendTab") {
+            window.setTimeout(function () {
+              try {
+                if (state && state.trendChart) {
+                  state.trendChart.resize();
+                }
+              } catch (error) {
+                /* La gráfica todavía puede estar cargando. */
+              }
+            }, 80);
+          }
+        });
+      });
+
+      fullscreenBtn.addEventListener("click", async function () {
+        try {
+          if (!document.fullscreenElement) {
+            await shell.requestFullscreen();
+          } else {
+            await document.exitFullscreen();
+          }
+        } catch (error) {
+          window.open(
+            window.location.href,
+            "_blank",
+            "noopener,noreferrer"
+          );
+        }
+      });
+
+      document.addEventListener("fullscreenchange", function () {
+        fullscreenLabel.textContent = document.fullscreenElement
+          ? "Salir de pantalla completa"
+          : "Pantalla completa";
+
+        refreshMapSize();
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 900) {
+          closeMobilePanels();
+        }
+
+        refreshMapSize();
+      });
+    })();
+  </script>
+</body>
+</html>
